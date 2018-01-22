@@ -8,6 +8,7 @@ class docker::repos {
   case $::osfamily {
     'Debian': {
       if ($docker::use_upstream_package_source) {
+<<<<<<< HEAD
         if ($docker::docker_cs) {
           $location = $docker::package_cs_source_location
           $key_source = $docker::package_cs_key_source
@@ -19,6 +20,11 @@ class docker::repos {
         }
 
         ensure_packages(['debian-keyring','debian-archive-keyring'])
+=======
+        $location = $docker::package_source_location
+        $key_source = $docker::package_key_source
+        $package_key = $docker::package_key
+>>>>>>> 139ba6a2e764ecf0aa95fd4f81662e957401ddcd
 
         apt::source { 'docker':
           location          => $location,
@@ -57,13 +63,9 @@ class docker::repos {
     }
     'RedHat': {
       if $docker::manage_package {
-        if ($docker::docker_cs) {
-          $baseurl = $docker::package_cs_source_location
-          $gpgkey = $docker::package_cs_key_source
-        } else {
-          $baseurl = $docker::package_source_location
-          $gpgkey = $docker::package_key_source
-        }
+        $baseurl = $docker::package_source_location
+        $gpgkey = $docker::package_key_source
+
         if ($docker::use_upstream_package_source) {
           yumrepo { 'docker':
             descr    => 'Docker',
