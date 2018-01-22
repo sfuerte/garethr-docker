@@ -8,36 +8,18 @@ class docker::repos {
   case $::osfamily {
     'Debian': {
       if ($docker::use_upstream_package_source) {
-<<<<<<< HEAD
-        if ($docker::docker_cs) {
-          $location = $docker::package_cs_source_location
-          $key_source = $docker::package_cs_key_source
-          $package_key = $docker::package_cs_key
-        } else {
-          $location = $docker::package_source_location
-          $key_source = $docker::package_key_source
-          $package_key = $docker::package_key
-        }
-
-        ensure_packages(['debian-keyring','debian-archive-keyring'])
-=======
         $location = $docker::package_source_location
         $key_source = $docker::package_key_source
         $package_key = $docker::package_key
->>>>>>> 139ba6a2e764ecf0aa95fd4f81662e957401ddcd
 
         apt::source { 'docker':
           location          => $location,
           release           => $docker::package_release,
           repos             => $docker::package_repos,
-          key               => {
-            id     => $package_key,
-            source => $key_source,
-          },
-          include => {
-            'src' => false
-          },
-          require => Package['debian-keyring','debian-archive-keyring']
+          key               => $package_key,
+          #key_source        => $key_source,
+          #required_packages => 'debian-keyring debian-archive-keyring',
+          #include_src       => false,
         }
         $url_split = split($location, '/')
         $repo_host = $url_split[2]
@@ -86,3 +68,4 @@ class docker::repos {
     default: {}
   }
 }
+
